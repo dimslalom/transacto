@@ -10,6 +10,57 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <style>
+        /* Custom DataTables styling */
+        .dataTables_wrapper {
+            padding: 1rem 0;
+        }
+        
+        .table {
+            width: 100% !important;
+        }
+        
+        .table > :not(caption) > * > * {
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            white-space: nowrap;
+        }
+        
+        /* Column-specific alignment */
+        .table th.date-column,
+        .table td.date-column {
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .table th.amount-column,
+        .table td.amount-column {
+            text-align: right;
+            min-width: 100px;
+            max-width: 120px;
+            white-space: nowrap;
+        }
+        
+        .table th.description-column,
+        .table td.description-column {
+            text-align: left;
+            min-width: 200px;
+        }
+
+        /* Add colors for positive/negative amounts */
+        .text-success {
+            color: #198754 !important;
+        }
+
+        .text-danger {
+            color: #dc3545 !important;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -261,20 +312,20 @@
                 
                 if (result.data) {
                     transactionDiv.innerHTML = result.data;
-                    // Destroy existing DataTable if it exists
+                    // Add column classes to the table headers
+                    const table = document.getElementById('transactionTable');
+                    if (table) {
+                        const headers = table.getElementsByTagName('th');
+                        headers[0].classList.add('date-column');
+                        headers[1].classList.add('amount-column');
+                        headers[2].classList.add('description-column');
+                    }
+                    
+                    // Initialize DataTable
                     if ($.fn.DataTable.isDataTable('#transactionTable')) {
                         $('#transactionTable').DataTable().destroy();
                     }
-                    // Initialize DataTable if table exists
-                    if (document.getElementById('transactionTable')) {
-                        $('#transactionTable').DataTable({
-                            pageLength: 10,
-                            order: [[0, 'desc']], // Sort by first column (date) descending
-                            searching: true,
-                            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                            responsive: true
-                        });
-                    }
+                    initializeDataTable('transactionTable');
                 } else if (result.error) {
                     transactionDiv.innerHTML = `<div class="alert alert-danger">${result.error}</div>`;
                 }
@@ -297,6 +348,52 @@
         };
 
         loadFiles();
+
+        // Update initializeDataTable function in index.html
+        function initializeDataTable(tableId) {
+            if (document.getElementById(tableId)) {
+                $(`#${tableId}`).DataTable({
+                    pageLength: 10,
+                    order: [[0, 'desc']], // Sort by date descending
+                    searching: true,
+                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    responsive: true,
+                    columnDefs: [
+                        {
+                            targets: [0], // Date column
+                            className: 'date-column'
+                        },
+                        {
+                            targets: [1], // Amount column
+                            className: 'amount-column',
+                            render: function(data, type, row) {
+                                if (type === 'display') {
+                                    // Parse string back to number and format
+                                    const num = typeof data === 'string' ? parseFloat(data.replace(/[^-.\d]/g, '')) : data;
+                                    const formatted = new Intl.NumberFormat('en-US', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                        style: 'decimal'
+                                    }).format(Math.abs(num));
+                                    // Add color and sign based on positive/negative value
+                                    return num >= 0 ? 
+                                        `<span class="text-success">+${formatted}</span>` : 
+                                        `<span class="text-danger">-${formatted}</span>`;
+                                }
+                                return data;
+                            }
+                        },
+                        {
+                            targets: [2], // Description column
+                            className: 'description-column'
+                        }
+                    ],
+                    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                         '<"row"<"col-sm-12"tr>>' +
+                         '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+                });
+            }
+        }
     </script>
 </body>
 </html>

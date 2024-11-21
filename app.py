@@ -167,11 +167,12 @@ def get_transactions():
             # Clean up the DataFrame for display
             df = df.fillna('')  # Replace NaN with empty string
             
-            # Format date and amount columns if they exist
+            # Format date and amount columns
             if 'date' in df.columns:
                 df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
             if 'amount' in df.columns:
-                df['amount'] = df['amount'].apply(lambda x: f"{float(x):,.2f}" if x else '')
+                # Preserve the full number precision
+                df['amount'] = df['amount'].apply(lambda x: f"{float(x):.2f}" if x != '' else '')
                 
             table_html = df.to_html(
                 classes='table table-striped table-hover',

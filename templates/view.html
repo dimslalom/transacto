@@ -3,7 +3,64 @@
 <html>
 <head>
     <title>View Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <style>
+        /* Custom DataTables styling */
+        .dataTables_wrapper {
+            padding: 1rem 0;
+        }
+        
+        .table {
+            width: 100% !important;
+            margin-bottom: 0 !important;
+        }
+        
+        .table > :not(caption) > * > * {
+            padding: 0.75rem;
+            vertical-align: middle;
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            white-space: nowrap;
+        }
+        
+        /* Column-specific alignment */
+        .table th.date-column,
+        .table td.date-column {
+            text-align: center;
+            min-width: 100px;
+            max-width: 120px;
+        }
+        
+        .table th.amount-column,
+        .table td.amount-column {
+            text-align: right;
+            min-width: 100px;
+            max-width: 120px;
+            white-space: nowrap;
+        }
+        
+        .table th.description-column,
+        .table td.description-column {
+            text-align: left;
+            min-width: 200px;
+        }
+
+        /* Add colors for positive/negative amounts */
+        .text-success {
+            color: #198754 !important;
+        }
+        
+        .text-danger {
+            color: #dc3545 !important;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -17,5 +74,70 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            // Add classes to table headers
+            const table = $('table');
+            const headers = table.find('th');
+            // Adjust index numbers to match correct columns
+            headers.eq(1).addClass('date-column');    // Date is second column
+            headers.eq(2).addClass('amount-column');   // Amount is third column
+            headers.eq(3).addClass('description-column'); // Description is fourth column
+
+            // Initialize DataTable with proper column definitions
+            table.DataTable({
+                pageLength: 10,
+                order: [[1, 'desc']], // Sort by date column (index 1) descending
+                searching: true,
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                responsive: true,
+                columnDefs: [
+                    {
+                        targets: [1], // Date column
+                        className: 'date-column',
+                        render: function(data, type, row) {
+                            if (type === 'display') {
+                                // Parse and format date
+                                const date = new Date(data);
+                                return date.toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    year: 'numeric'
+                                });
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        targets: [2], // Amount column
+                        className: 'amount-column',
+                        render: function(data, type, row) {
+                            if (type === 'display') {
+                                const num = parseFloat(data);
+                                const formatted = new Intl.NumberFormat('en-US', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                    style: 'decimal'
+                                }).format(num);
+                                // Add color based on positive/negative value
+                                return num >= 0 ? 
+                                    `<span class="text-success">+${formatted}</span>` : 
+                                    `<span class="text-danger">${formatted}</span>`;
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        targets: [3], // Description column
+                        className: 'description-column'
+                    }
+                ],
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                     '<"row"<"col-sm-12"tr>>' +
+                     '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
+            });
+        });
+    </script>
 </body>
 </html>
