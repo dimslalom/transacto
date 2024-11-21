@@ -2,7 +2,10 @@ from flask import Flask, render_template, request, send_file, jsonify
 from werkzeug.utils import secure_filename
 import os
 import shutil
+import pandas as pd
 from data_lake import DataLake
+from pathlib import Path  # Add this at the top with other imports
+import json
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -21,8 +24,6 @@ def upload_file():
         return jsonify({'error': 'No file part'}), 400
     
     file = request.files['file']
-    folder = request.form.get('folder', 'transactions')
-    
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
         
@@ -34,8 +35,8 @@ def upload_file():
     
     # Process file through data lake
     try:
-        data_lake.copy_to_raw(filepath, folder)
-        data_lake.process_raw_data(folder)
+        data_lake.copy_to_raw(filepath)
+        data_lake.process_raw_data()
         os.remove(filepath)  # Clean up temp file
         return jsonify({'message': 'File processed successfully'})
     except Exception as e:
@@ -117,19 +118,6 @@ def move_file():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/folder', methods=['POST'])
-def create_folder():
-    try:
-        path = request.json.get('path')
-        if not path:
-            return jsonify({'error': 'Path required'}), 400
-            
-        full_path = os.path.join('data_lake', path)
-        os.makedirs(full_path, exist_ok=True)
-        return jsonify({'message': f'Folder {path} created successfully'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 @app.route('/file/<path:file_path>')
 def file_details(file_path):
     try:
@@ -150,19 +138,52 @@ def file_details(file_path):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Add to app.py - new route to get directory structure
-@app.route('/directories')
-def list_directories():
-    directories = []
-    for zone in ['raw', 'processed', 'staging']:
-        base_path = os.path.join('data_lake', zone)
-        for root, dirs, _ in os.walk(base_path):
-            rel_path = os.path.relpath(root, 'data_lake')
-            directories.append(rel_path)
-            for dir in dirs:
-                full_path = os.path.join(rel_path, dir)
-                directories.append(full_path)
-    return jsonify(directories)
+@app.route('/transactions')
+def get_transactions():
+    try:
+        # Get processed files from all folders
+        all_data = []
+        processed_path = Path('data_lake/processed')
+        
+        # Walk through all subdirectories in processed zone
+        for root, _, files in os.walk(processed_path):
+            for file in files:
+                if file.endswith('.json'):  # Look for JSON files
+                    try:
+                        file_path = Path(root) / file
+                        with open(file_path, 'r') as f:
+                            data = json.load(f)
+                            df = pd.DataFrame(data)
+                            if not df.empty:
+                                all_data.append(df)
+                    except Exception as e:
+                        print(f"Error reading {file}: {e}")
+                        continue
+
+        # Combine all dataframes
+        if all_data:
+            df = pd.concat(all_data, ignore_index=True)
+            
+            # Clean up the DataFrame for display
+            df = df.fillna('')  # Replace NaN with empty string
+            
+            # Format date and amount columns if they exist
+            if 'date' in df.columns:
+                df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
+            if 'amount' in df.columns:
+                df['amount'] = df['amount'].apply(lambda x: f"{float(x):,.2f}" if x else '')
+                
+            table_html = df.to_html(
+                classes='table table-striped table-hover',
+                index=False,
+                table_id='transactionTable',
+                escape=False
+            )
+            return jsonify({'data': table_html})
+        return jsonify({'data': '<p class="text-muted">No processed files found in the data lake.</p>'})
+    except Exception as e:
+        print(f"Error loading transactions: {str(e)}")  # Debug print
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)

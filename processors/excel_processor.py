@@ -3,9 +3,14 @@ import pandas as pd
 import chardet
 from pathlib import Path
 from .base_processor import BaseProcessor
+from .transaction_processor import TransactionProcessor
 
 class ExcelCsvProcessor(BaseProcessor):
+    def __init__(self):
+        self.transaction_processor = TransactionProcessor()
+
     def process(self, file_path: Path) -> pd.DataFrame:
+        # Read the file
         if file_path.suffix == '.csv':
             # Detect file encoding
             with open(file_path, 'rb') as file:
@@ -17,11 +22,16 @@ class ExcelCsvProcessor(BaseProcessor):
             encodings = [encoding, 'utf-8', 'latin1', 'iso-8859-1', 'cp1252']
             for enc in encodings:
                 try:
-                    return pd.read_csv(file_path, encoding=enc)
+                    df = pd.read_csv(file_path, encoding=enc)
+                    break
                 except UnicodeDecodeError:
                     continue
                 except Exception as e:
                     print(f"Error reading CSV with {enc} encoding: {e}")
-            raise ValueError(f"Could not read CSV file with any supported encoding")
+            else:
+                raise ValueError(f"Could not read CSV file with any supported encoding")
         else:
-            return pd.read_excel(file_path)
+            df = pd.read_excel(file_path)
+
+        # Process transactions
+        return self.transaction_processor.process_transactions(df)
