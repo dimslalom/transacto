@@ -1,0 +1,282 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Lake Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Data Lake Management</h2>
+        
+        <!-- File Upload -->
+        <div class="card mt-4">
+            <div class="card-header">Upload File</div>
+            <div class="card-body">
+                <form id="uploadForm">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select File</label>
+                        <input type="file" class="form-control" id="file" name="file">
+                    </div>
+                    <div class="mb-3">
+                        <label for="folder" class="form-label">Folder</label>
+                        <input type="text" class="form-control" id="folder" name="folder" value="transactions">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Create Folder -->
+        <div class="card mt-4">
+            <div class="card-header">Create Folder</div>
+            <div class="card-body">
+                <form id="folderForm">
+                    <div class="mb-3">
+                        <label for="folderPath" class="form-label">Folder Path</label>
+                        <input type="text" class="form-control" id="folderPath" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Create Folder</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- File Management -->
+        <div class="card mt-4">
+            <div class="card-header">Files in Data Lake</div>
+            <div class="card-body">
+                <div id="fileList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <span id="deleteFileName"></span>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move Modal -->
+    <div class="modal fade" id="moveModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Move File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Source File:</label>
+                        <input type="text" class="form-control" id="moveSource" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label>Select Destination:</label>
+                        <select class="form-select" id="moveDestination">
+                            <option value="">Choose destination...</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label>New Filename (optional):</label>
+                        <input type="text" class="form-control" id="moveNewFilename" placeholder="Leave empty to keep original name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-warning" id="confirmMove">Move</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // File upload handler
+        document.getElementById('uploadForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('file', document.getElementById('file').files[0]);
+            formData.append('folder', document.getElementById('folder').value);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                alert(result.message || result.error);
+                loadFiles();
+            } catch (error) {
+                alert('Error uploading file');
+            }
+        };
+
+        // Create folder handler
+        document.getElementById('folderForm').onsubmit = async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch('/folder', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        path: document.getElementById('folderPath').value
+                    })
+                });
+                const result = await response.json();
+                alert(result.message || result.error);
+                loadFiles();
+            } catch (error) {
+                alert('Error creating folder');
+            }
+        };
+
+        // Delete file handler
+        async function deleteFile(path) {
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            document.getElementById('deleteFileName').textContent = path;
+            
+            const confirmDelete = document.getElementById('confirmDelete');
+            confirmDelete.onclick = async () => {
+                try {
+                    const response = await fetch(`/delete/${encodeURIComponent(path)}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    if (response.ok) {
+                        showAlert('success', result.message);
+                        loadFiles();
+                    } else {
+                        showAlert('danger', result.error);
+                    }
+                } catch (error) {
+                    showAlert('danger', 'Error deleting file');
+                }
+                deleteModal.hide();
+            };
+            
+            deleteModal.show();
+        }
+
+        // Add directory loading function
+        async function loadDirectories() {
+            try {
+                const response = await fetch('/directories');
+                const directories = await response.json();
+                const select = document.getElementById('moveDestination');
+                select.innerHTML = '<option value="">Choose destination...</option>' +
+                    directories.map(dir => `<option value="${dir}">${dir}</option>`).join('');
+            } catch (error) {
+                showAlert('danger', 'Error loading directories');
+            }
+        }
+
+        // Move file handler
+        async function moveFile(source) {
+            const moveModal = new bootstrap.Modal(document.getElementById('moveModal'));
+            document.getElementById('moveSource').value = source;
+            document.getElementById('moveNewFilename').value = '';
+            
+            // Load directories
+            await loadDirectories();
+            
+            const confirmMove = document.getElementById('confirmMove');
+            confirmMove.onclick = async () => {
+                const destDir = document.getElementById('moveDestination').value;
+                const newFilename = document.getElementById('moveNewFilename').value;
+                
+                if (!destDir) {
+                    showAlert('warning', 'Please select destination directory');
+                    return;
+                }
+
+                // Construct destination path
+                const originalFilename = source.split('/').pop();
+                const destination = destDir + '/' + (newFilename || originalFilename);
+
+                try {
+                    const response = await fetch('/move', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ source, destination })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        showAlert('success', result.message);
+                        loadFiles();
+                    } else {
+                        showAlert('danger', result.error);
+                    }
+                } catch (error) {
+                    showAlert('danger', 'Error moving file');
+                }
+                moveModal.hide();
+            };
+            
+            moveModal.show();
+        }
+
+        // Add alert function
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.card'));
+            
+            // Auto-dismiss after 3 seconds
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // Update loadFiles function
+        async function loadFiles() {
+            try {
+                const response = await fetch('/files');
+                const files = await response.json();
+                const fileList = document.getElementById('fileList');
+                
+                if (files.length === 0) {
+                    fileList.innerHTML = '<div class="alert alert-info">No files found</div>';
+                    return;
+                }
+                
+                fileList.innerHTML = files.map(file => {
+                    // Ensure proper path construction with slash
+                    const filePath = `${file.zone}/${file.name}`;  // Changed this line
+                    return `
+                        <div class="mb-2 p-2 border rounded">
+                            <strong>${file.zone}:</strong> ${file.name}
+                            <div class="float-end">
+                                <button onclick="deleteFile('${filePath}')" class="btn btn-sm btn-danger">Delete</button>
+                                <button onclick="moveFile('${filePath}')" class="btn btn-sm btn-warning">Move</button>
+                                <a href="/view/${encodeURIComponent(filePath)}" class="btn btn-sm btn-info">View</a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                showAlert('danger', 'Error loading files');
+            }
+        }
+
+        loadFiles();
+    </script>
+</body>
+</html>
