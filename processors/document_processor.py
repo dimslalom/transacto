@@ -4,11 +4,20 @@ from pathlib import Path
 import PyPDF2
 import docx
 from .base_processor import BaseProcessor
+from .bank_statement_parser import BankStatementParser
 
 class DocumentProcessor(BaseProcessor):
+    def __init__(self):
+        self.bank_parser = BankStatementParser()
+    
     def process(self, file_path: Path) -> pd.DataFrame:
         if file_path.suffix.lower() == '.pdf':
-            return self._process_pdf(file_path)
+            # Try parsing as bank statement first
+            try:
+                return self.bank_parser.parse_pdf(file_path)
+            except Exception:
+                # Fall back to regular PDF processing if not a bank statement
+                return self._process_pdf(file_path)
         elif file_path.suffix.lower() == '.docx':
             return self._process_docx(file_path)
         else:

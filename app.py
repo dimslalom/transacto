@@ -30,17 +30,35 @@ def upload_file():
     filename = secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     
-    # Save uploaded file temporarily
-    file.save(filepath)
-    
-    # Process file through data lake
     try:
+        # Save uploaded file temporarily
+        file.save(filepath)
+        
+        # Special handling for PDF files
+        if filename.lower().endswith('.pdf'):
+            message = "Bank statement processed successfully"
+        else:
+            message = "File processed successfully"
+            
+        # Process file through data lake
         data_lake.copy_to_raw(filepath)
         data_lake.process_raw_data()
-        os.remove(filepath)  # Clean up temp file
-        return jsonify({'message': 'File processed successfully'})
+        
+        # Clean up temp file
+        os.remove(filepath)
+        
+        return jsonify({
+            'message': message,
+            'status': 'success'
+        })
+        
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        if os.path.exists(filepath):
+            os.remove(filepath)
+        return jsonify({
+            'error': str(e),
+            'status': 'error'
+        }), 500
 
 @app.route('/view/<path:file_path>')
 def view_data(file_path):

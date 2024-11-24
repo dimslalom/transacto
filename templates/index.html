@@ -63,6 +63,15 @@
     </style>
 </head>
 <body>
+    <div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-center text-white">
+                <div class="spinner-border mb-2" role="status"></div>
+                <div id="loadingMessage">Processing...</div>
+            </div>
+        </div>
+    </div>
+
     <div class="container mt-5">
         <h2>Data Lake Management</h2>
         
@@ -149,24 +158,76 @@
         </div>
     </div>
 
+    <div class="modal fade" id="bankStatementModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bank Statement Processing</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="progress mb-3" style="height: 25px;">
+                        <div id="processProgress" class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <div id="processLog" class="border p-2" style="height: 200px; overflow-y: auto;">
+                        <div class="text-muted">Waiting to process...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // File upload handler
         document.getElementById('uploadForm').onsubmit = async (e) => {
             e.preventDefault();
+            const file = document.getElementById('file').files[0];
+            
+            if (!file) {
+                showAlert('warning', 'Please select a file');
+                return;
+            }
+
+            // Show processing modal for PDF files
+            if (file.name.toLowerCase().endsWith('.pdf')) {
+                const modal = new bootstrap.Modal(document.getElementById('bankStatementModal'));
+                modal.show();
+                updateProgress(0, 'Starting bank statement processing...');
+            } else {
+                showLoading('Uploading file...');
+            }
+
             const formData = new FormData();
-            formData.append('file', document.getElementById('file').files[0]);
+            formData.append('file', file);
 
             try {
                 const response = await fetch('/upload', {
                     method: 'POST',
                     body: formData
                 });
+
                 const result = await response.json();
-                alert(result.message || result.error);
-                loadFiles();
-                await loadTransactions();  // Add this line
+                
+                if (response.ok) {
+                    if (file.name.toLowerCase().endsWith('.pdf')) {
+                        updateProgress(100, 'Processing complete!');
+                        setTimeout(() => {
+                            $('#bankStatementModal').modal('hide');
+                            showAlert('success', result.message);
+                        }, 1000);
+                    } else {
+                        showAlert('success', result.message);
+                    }
+                    await loadFiles();
+                    await loadTransactions();
+                } else {
+                    showAlert('danger', result.error);
+                }
             } catch (error) {
-                alert('Error uploading file');
+                showAlert('danger', 'Error uploading file');
+            } finally {
+                hideLoading();
             }
         };
 
@@ -274,6 +335,7 @@
 
         // Update loadFiles function
         async function loadFiles() {
+            showLoading('Loading files...');
             try {
                 const response = await fetch('/files');
                 const files = await response.json();
@@ -300,11 +362,14 @@
                 }).join('');
             } catch (error) {
                 showAlert('danger', 'Error loading files');
+            } finally {
+                hideLoading();
             }
         }
 
         // Add this function to load transactions
         async function loadTransactions() {
+            showLoading('Loading transactions...');
             try {
                 const response = await fetch('/transactions');
                 const result = await response.json();
@@ -332,6 +397,8 @@
             } catch (error) {
                 document.getElementById('transactionData').innerHTML = 
                     '<div class="alert alert-danger">Error loading transactions</div>';
+            } finally {
+                hideLoading();
             }
         }
 
@@ -393,6 +460,20 @@
                          '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>'
                 });
             }
+        }
+
+        function showLoading(message) {
+            $('#loadingMessage').text(message);
+            $('#loadingOverlay').fadeIn(200);
+        }
+
+        function hideLoading() {
+            $('#loadingOverlay').fadeOut(200);
+        }
+
+        function updateProgress(percent, message) {
+            $('#processProgress').css('width', `${percent}%`);
+            $('#processLog').prepend(`<div>${message}</div>`);
         }
     </script>
 </body>

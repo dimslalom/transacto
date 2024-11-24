@@ -22,6 +22,13 @@ class TransactionProcessor:
             'source': r'(?i)(category|type|description|transaction.*type)',
             'destination': r'(?i)(recipient|to|payee)'
         }
+        
+        # Add bank statement patterns
+        self.bank_patterns = {
+            'transaction': r'(?i)(ID#[\d-]+)',
+            'transfer': r'(?i)(incoming|outgoing)\s+transfer',
+            'pos': r'(?i)pos\s+transaction'
+        }
 
     def detect_columns(self, df: pd.DataFrame) -> Dict[str, str]:
         """Detect relevant transaction columns with improved accuracy"""
@@ -49,6 +56,14 @@ class TransactionProcessor:
 
     def process_transactions(self, df: pd.DataFrame) -> pd.DataFrame:
         """Process dataframe into standardized transaction format"""
+        # Check if data is already in bank statement format
+        if all(col in df.columns for col in ['Date', 'Payee', 'Memo', 'Amount']):
+            return df.rename(columns={
+                'Date': 'date',
+                'Payee': 'description',
+                'Amount': 'amount'
+            })
+            
         # Detect columns
         columns = self.detect_columns(df)
         

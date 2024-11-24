@@ -1,0 +1,74 @@
+[
+    {
+        "Date":"2024-11-01",
+        "Payee":"Google",
+        "Memo":"Transaction",
+        "Amount":-46.065
+    },
+    {
+        "Date":"2024-11-01",
+        "Payee":"SHOPEEFOOD Jakarta",
+        "Memo":"Transaction",
+        "Amount":-18.648
+    },
+    {
+        "Date":"2024-11-02",
+        "Payee":"PUTRI SALSABILLA",
+        "Memo":"Transaction",
+        "Amount":-500.0
+    },
+    {
+        "Date":"2024-11-02",
+        "Payee":"SUPERINDO KJN",
+        "Memo":"Transaction",
+        "Amount":-63.385
+    },
+    {
+        "Date":"2024-11-02",
+        "Payee":"PUTRI SALSABILLA",
+        "Memo":"Transaction",
+        "Amount":-174.0
+    },
+    {
+        "Date":"2024-11-02",
+        "Payee":"PUTRI SALSABILLA",
+        "Memo":"Transaction",
+        "Amount":-700.0
+    },
+    {
+        "Date":"2024-11-02",
+        "Payee":"PUTRI SALSABILLA",
+        "Memo":"Transaction",
+        "Amount":-10.0
+    },
+    {
+        "Date":"2024-11-06",
+        "Payee":"PUTRI SALSABILLA",
+        "Memo":"Transaction",
+        "Amount":50.0
+    },
+    {
+        "Date":"2024-11-08",
+        "Payee":"Cash Withdrawal",
+        "Memo":"Transaction",
+        "Amount":-200.0
+    },
+    {
+        "Date":"2024-11-08",
+        "Payee":"PUTRI SALSABILLA",
+        "Memo":"Transaction",
+        "Amount":-16.0
+    },
+    {
+        "Date":"2024-11-08",
+        "Payee":"DIMAS GISTHA",
+        "Memo":"Transaction",
+        "Amount":-50.0
+    },
+    {
+        "Date":"2024-11-09",
+        "Payee":"PUTRI SALSABILLA",
+        "Memo":"Transaction",
+        "Amount":200.0
+    }
+]
