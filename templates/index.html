@@ -85,6 +85,20 @@
             align-items: center;
             justify-content: center;
         }
+        
+        /* Add styles for selected rows */
+        .selected {
+            background-color: #e2e6ea !important;
+        }
+        
+        /* Style for action buttons */
+        .action-buttons {
+            margin-bottom: 1rem;
+        }
+        
+        .action-buttons button {
+            margin-right: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -134,6 +148,11 @@
                             <label class="form-check-label" for="searchAmount">Amount</label>
                         </div>
                     </div>
+                </div>
+                <div class="action-buttons">
+                    <button id="addEntry" class="btn btn-success">Add Entry</button>
+                    <button id="deleteSelected" class="btn btn-danger" disabled>Delete Selected</button>
+                    <span id="selectedCount" class="ms-2"></span>
                 </div>
                 <div id="transactionData" class="table-responsive"></div>
             </div>
@@ -614,42 +633,74 @@
                 refreshApp();
             });
 
-            // Add these functions after existing scripts
+            // Update searchTransactions function
             async function searchTransactions() {
-                const query = document.getElementById('searchQuery').value.trim();
-                if (!query) {
-                    await loadTransactions();
-                    return;
-                }
-
-                // Get selected search fields
-                const fields = ['description', 'payee', 'amount']
-                    .filter(field => document.getElementById(`search${field.charAt(0).toUpperCase() + field.slice(1)}`).checked);
-
                 try {
+                    const query = document.getElementById('searchQuery').value.trim();
+                    if (!query) {
+                        await loadTransactions();
+                        return;
+                    }
+
+                    // Show loading indicator
+                    document.getElementById('transactionData').innerHTML = 
+                        '<div class="text-center"><div class="spinner-border"></div></div>';
+
+                    // Get selected fields
+                    const fields = [];
+                    if (document.getElementById('searchDescription').checked) fields.push('description');
+                    if (document.getElementById('searchPayee').checked) fields.push('payee');
+                    if (document.getElementById('searchAmount').checked) fields.push('amount');
+
+                    // Make search request
                     const response = await fetch('/search', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ query, fields })
+                        body: JSON.stringify({ 
+                            query: query,
+                            fields: fields
+                        })
                     });
 
                     const result = await response.json();
                     const transactionDiv = document.getElementById('transactionData');
 
-                    if (result.data) {
-                        transactionDiv.innerHTML = result.data;
-                        if ($.fn.DataTable.isDataTable('#searchResultsTable')) {
-                            $('#searchResultsTable').DataTable().destroy();
-                        }
-                        initializeDataTable('searchResultsTable');
-                    } else if (result.error) {
-                        transactionDiv.innerHTML = `<div class="alert alert-danger">${result.error}</div>`;
+                    if (!response.ok) {
+                        transactionDiv.innerHTML = `<div class="alert alert-danger">${result.error || 'Error performing search'}</div>`;
+                        return;
                     }
+
+                    // Handle empty results
+                    if (!result.data) {
+                        transactionDiv.innerHTML = '<div class="alert alert-info">No results found</div>';
+                        return;
+                    }
+
+                    // Display results
+                    transactionDiv.innerHTML = result.data;
+
+                    // Reinitialize DataTable if table exists
+                    const table = document.getElementById('transactionTable');
+                    if (table) {
+                        try {
+                            // Destroy existing DataTable if it exists
+                            if ($.fn.DataTable.isDataTable('#transactionTable')) {
+                                $('#transactionTable').DataTable().destroy();
+                            }
+                            
+                            // Initialize new DataTable
+                            initializeDataTable('transactionTable');
+                        } catch (e) {
+                            console.error('Error initializing DataTable:', e);
+                        }
+                    }
+
                 } catch (error) {
+                    console.error('Search error:', error);
                     document.getElementById('transactionData').innerHTML = 
-                        '<div class="alert alert-danger">Error searching transactions</div>';
+                        `<div class="alert alert-danger">Error performing search: ${error.message}</div>`;
                 }
             }
 
@@ -658,12 +709,17 @@
                 const searchButton = document.getElementById('searchButton');
                 const searchQuery = document.getElementById('searchQuery');
 
-                searchButton.addEventListener('click', searchTransactions);
-                searchQuery.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        searchTransactions();
-                    }
-                });
+                if (searchButton) {
+                    searchButton.addEventListener('click', searchTransactions);
+                }
+                
+                if (searchQuery) {
+                    searchQuery.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            searchTransactions();
+                        }
+                    });
+                }
             });
 
             // Add these functions to handle entry management
@@ -758,6 +814,52 @@
 
             // Add event listener for saving entries
             document.getElementById('saveEntry').addEventListener('click', saveEntry);
+
+            function updateSelectedCount() {
+                const selectedRows = document.querySelectorAll('tr.selected').length;
+                const deleteButton = document.getElementById('deleteSelected');
+                const countSpan = document.getElementById('selectedCount');
+                
+                deleteButton.disabled = selectedRows === 0;
+                countSpan.textContent = selectedRows ? `${selectedRows} selected` : '';
+            }
+
+            async function deleteSelectedEntries() {
+                const selectedRows = document.querySelectorAll('tr.selected');
+                if (!selectedRows.length) return;
+
+                if (!confirm(`Are you sure you want to delete ${selectedRows.length} entries?`)) return;
+
+                const timestamps = Array.from(selectedRows).map(row => {
+                    return row.querySelector('td:nth-child(2)').textContent; // Assuming date is in second column
+                });
+
+                try {
+                    const response = await fetch('/entries/delete-multiple', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ timestamps })
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        showAlert('success', result.message);
+                        await loadTransactions();
+                    } else {
+                        showAlert('danger', result.error);
+                    }
+                } catch (error) {
+                    showAlert('danger', 'Error deleting entries');
+                }
+            }
+
+            // Add event listeners
+            document.addEventListener('DOMContentLoaded', () => {
+                // ...existing listeners...
+                
+                document.getElementById('addEntry').addEventListener('click', () => openEntryModal('add'));
+                document.getElementById('deleteSelected').addEventListener('click', deleteSelectedEntries);
+            });
         </script>
     </div>
 </body>

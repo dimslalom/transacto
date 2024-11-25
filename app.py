@@ -217,35 +217,80 @@ def refresh():
 @app.route('/search', methods=['POST'])
 def search_transactions():
     try:
-        search_query = request.json.get('query', '')
-        search_fields = request.json.get('fields', [])
+        # Get search parameters with debug logging
+        data = request.get_json()
+        print(f"Received search request: {data}")  # Debug print
+        
+        search_query = data.get('query', '').strip()
+        search_fields = data.get('fields', [])
+        
+        print(f"Search query: {search_query}, fields: {search_fields}")  # Debug print
         
         if not search_query:
-            return jsonify({'error': 'No search query provided'}), 400
-            
+            return jsonify({'data': '<p class="text-muted">Please enter a search term.</p>'})
+
+        # Make sure master database exists
+        if not os.path.exists('data_lake/master_database.json'):
+            with open('data_lake/master_database.json', 'w', encoding='utf-8') as f:
+                json.dump([], f)
+
+        # Perform search
         results = data_lake.search_transactions(search_query, search_fields)
+        print(f"Search results: {len(results)} rows found")  # Debug print
         
-        if not results.empty:
-            # Format date and amount columns
-            results['date'] = pd.to_datetime(results['date']).dt.strftime('%Y-%m-%d')
-            results['amount'] = results['amount'].apply(lambda x: f"{float(x):.2f}")
-            
-            # Make source_file clickable
-            results['source_file'] = results['source_file'].apply(
-                lambda x: ' '.join([f'<a href="/file/{file.strip()}">{file.strip()}</a>' for file in x.split(', ')])
-            )
-            
-            table_html = results.to_html(
-                classes='table table-striped table-hover',
-                index=False,
-                table_id='searchResultsTable',
-                escape=False
-            )
-            return jsonify({'data': table_html})
-            
-        return jsonify({'data': '<p class="text-muted">No results found.</p>'})
+        if results.empty:
+            return jsonify({'data': '<p class="text-muted">No results found.</p>'})
+
+        # Format results
+        results = results.copy()
+        results = results.fillna('')
+
+        # Format date with error handling
+        if 'date' in results.columns:
+            try:
+                results['date'] = pd.to_datetime(results['date'], unit='ms').dt.strftime('%Y-%m-%d')
+            except Exception as e:
+                print(f"Error formatting dates: {e}")
+                # Fallback date formatting if unit='ms' fails
+                results['date'] = pd.to_datetime(results['date']).dt.strftime('%Y-%m-%d')
+
+        # Format amount with error handling
+        if 'amount' in results.columns:
+            try:
+                results['amount'] = results['amount'].apply(lambda x: f"{float(x):.2f}" if x != '' else '')
+            except Exception as e:
+                print(f"Error formatting amounts: {e}")
+
+        # Format source files as buttons
+        if 'source_file' in results.columns:
+            try:
+                results['source_file'] = results['source_file'].apply(
+                    lambda x: ' '.join([
+                        f'<a href="/file/{file.strip()}" class="btn btn-sm btn-outline-secondary">{Path(file.strip()).name}</a>' 
+                        for file in str(x).split(', ')
+                    ])
+                )
+            except Exception as e:
+                print(f"Error formatting source files: {e}")
+
+        # Ensure all required columns exist
+        required_columns = ['date', 'amount', 'description', 'payee', 'source_file']
+        for col in required_columns:
+            if col not in results.columns:
+                results[col] = ''
+
+        # Generate table HTML
+        table_html = results.to_html(
+            classes='table table-striped table-hover',
+            index=False,
+            table_id='transactionTable',
+            escape=False
+        )
         
+        return jsonify({'data': table_html})
+
     except Exception as e:
+        print(f"Search error: {str(e)}")  # Detailed error logging
         return jsonify({'error': str(e)}), 500
 
 @app.route('/entry/<int:timestamp>', methods=['GET'])
@@ -287,6 +332,24 @@ def delete_entry(timestamp):
         if success:
             return jsonify({'message': 'Entry deleted successfully'})
         return jsonify({'error': 'Failed to delete entry'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/entries/delete-multiple', methods=['POST'])
+def delete_multiple_entries():
+    try:
+        timestamps = request.json.get('timestamps', [])
+        if not timestamps:
+            return jsonify({'error': 'No entries selected'}), 400
+
+        success_count = 0
+        for timestamp in timestamps:
+            if data_lake.delete_entry(int(timestamp)):
+                success_count += 1
+
+        return jsonify({
+            'message': f'Successfully deleted {success_count} out of {len(timestamps)} entries'
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

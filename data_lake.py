@@ -191,45 +191,46 @@ class DataLake:
                 return pd.DataFrame()
 
     def search_transactions(self, query: str, fields: list = None) -> pd.DataFrame:
-        """
-        Search transactions in master database using a query string
-        """
+        """Search transactions in master database"""
         try:
-            df = self.get_master_data()
-            if df.empty:
+            # Load master database
+            if not self.master_database.exists():
+                print("Master database does not exist")
                 return pd.DataFrame()
 
-            # If no specific fields are provided, search all text fields
+            df = pd.read_json(self.master_database, orient='records')
+            if df.empty:
+                print("Empty master database")
+                return df
+
+            # Default search fields
             if not fields:
-                fields = ['description', 'payee', 'source_file']
+                fields = ['description', 'payee']
 
-            # Convert query to lowercase for case-insensitive search
-            query = query.lower()
-            
-            # Create mask for each searchable field
-            masks = []
+            # Convert query to string and lowercase
+            query = str(query).lower()
+            mask = pd.Series(False, index=df.index)
+
+            # Search in specified fields
             for field in fields:
-                if field in df.columns:
-                    # Convert field values to string and lowercase
-                    field_mask = df[field].astype(str).str.lower().str.contains(query, na=False)
-                    masks.append(field_mask)
-                    
-            # For amount field, handle numeric search
-            if 'amount' in fields:
-                try:
-                    amount = float(query)
-                    masks.append(df['amount'].round(2) == round(amount, 2))
-                except ValueError:
-                    pass
+                if field not in df.columns:
+                    continue
+                
+                if field == 'amount':
+                    # Try to convert query to float for amount search
+                    try:
+                        amount = float(query)
+                        mask |= (df['amount'] == amount)
+                    except ValueError:
+                        continue
+                else:
+                    # Text search for other fields
+                    mask |= df[field].astype(str).str.lower().str.contains(query, na=False)
 
-            # Combine all masks with OR operation
-            final_mask = pd.concat(masks, axis=1).any(axis=1)
-            
-            # Return filtered results
-            return df[final_mask].copy()
+            return df[mask].copy()
 
         except Exception as e:
-            print(f"Search error: {e}")
+            print(f"Error searching transactions: {e}")
             return pd.DataFrame()
 
     def get_entry(self, timestamp: int) -> dict:

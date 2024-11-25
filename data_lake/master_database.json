@@ -719,5 +719,12 @@
         "description":"Interest",
         "payee":"",
         "source_file":"data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json"
+    },
+    {
+        "date":1732492800000,
+        "amount":20000.0,
+        "description":"Mie ayam",
+        "payee":"Kantin ITS",
+        "source_file":"manual_entry"
     }
 ]
