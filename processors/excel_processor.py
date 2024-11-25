@@ -34,4 +34,12 @@ class ExcelCsvProcessor(BaseProcessor):
             df = pd.read_excel(file_path)
 
         # Process transactions
-        return self.transaction_processor.process_transactions(df)
+        transactions = self.transaction_processor.process_transactions(df)
+        
+        # Extract payee if present
+        if 'payee' in df.columns:
+            transactions['payee'] = df['payee']
+        else:
+            transactions['payee'] = ''
+        
+        return transactions

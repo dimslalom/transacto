@@ -4,8 +4,9 @@ import os
 import shutil
 import pandas as pd
 from data_lake import DataLake
-from pathlib import Path  # Add this at the top with other imports
+from pathlib import Path
 import json
+import time
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -37,6 +38,7 @@ def upload_file():
     try:
         data_lake.copy_to_raw(filepath)
         data_lake.process_raw_data()
+        data_lake.update_master_database()
         os.remove(filepath)  # Clean up temp file
         return jsonify({'message': 'File processed successfully'})
     except Exception as e:
@@ -59,6 +61,9 @@ def view_data(file_path):
                     content = f.read()
                 return render_template('view.html', 
                                     data=f'<pre class="bg-light p-3">{content}</pre>')
+            else:
+                return render_template('view.html', 
+                                    data=f'<div class="alert alert-danger">Error: File not found</div>')
     except Exception as e:
         return render_template('view.html', 
                              data=f'<div class="alert alert-danger">Error: {str(e)}</div>')
@@ -141,49 +146,142 @@ def file_details(file_path):
 @app.route('/transactions')
 def get_transactions():
     try:
-        # Get processed files from all folders
-        all_data = []
-        processed_path = Path('data_lake/processed')
-        
-        # Walk through all subdirectories in processed zone
-        for root, _, files in os.walk(processed_path):
-            for file in files:
-                if file.endswith('.json'):  # Look for JSON files
-                    try:
-                        file_path = Path(root) / file
-                        with open(file_path, 'r') as f:
-                            data = json.load(f)
-                            df = pd.DataFrame(data)
-                            if not df.empty:
-                                all_data.append(df)
-                    except Exception as e:
-                        print(f"Error reading {file}: {e}")
-                        continue
+        # Initialize master database if it doesn't exist
+        if not os.path.exists('data_lake/master_database.json'):
+            with open('data_lake/master_database.json', 'w', encoding='utf-8') as f:
+                json.dump([], f)
+            print("Initialized master database")
 
-        # Combine all dataframes
-        if all_data:
-            df = pd.concat(all_data, ignore_index=True)
+        # Get data with retry logic
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                df = data_lake.get_master_data()
+                break
+            except Exception as e:
+                if attempt == max_retries - 1:
+                    raise e
+                time.sleep(0.5)
+                continue
+
+        # Handle empty DataFrame case
+        if df.empty:
+            return jsonify({'data': '<p class="text-muted">No transactions found.</p>'})
+
+        # Process the DataFrame
+        df = df.copy()  # Create a copy to avoid SettingWithCopyWarning
+        df = df.fillna('')
+
+        # Format columns
+        if 'date' in df.columns:
+            df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
+        if 'amount' in df.columns:
+            df['amount'] = df['amount'].apply(lambda x: f"{float(x):.2f}" if x != '' else '')
+        if 'source_file' in df.columns:
+            df['source_file'] = df['source_file'].apply(
+                lambda x: ' '.join([f'<a href="/file/{file.strip()}">{file.strip()}</a>' 
+                                  for file in str(x).split(', ')])
+            )
+
+        # Ensure all required columns exist
+        for col in ['date', 'amount', 'description', 'payee', 'source_file']:
+            if col not in df.columns:
+                df[col] = ''
+
+        # Generate HTML table
+        table_html = df.to_html(
+            classes='table table-striped table-hover',
+            index=False,
+            table_id='transactionTable',
+            escape=False
+        )
+        
+        return jsonify({'data': table_html})
+
+    except Exception as e:
+        print(f"Error in get_transactions: {str(e)}")  # Server-side logging
+        return jsonify({
+            'error': f'Unable to load transactions: {str(e)}. Please try refreshing the page.'
+        }), 500
+
+@app.route('/refresh')
+def refresh():
+    return jsonify({'message': 'Refresh triggered'})
+
+@app.route('/search', methods=['POST'])
+def search_transactions():
+    try:
+        search_query = request.json.get('query', '')
+        search_fields = request.json.get('fields', [])
+        
+        if not search_query:
+            return jsonify({'error': 'No search query provided'}), 400
             
-            # Clean up the DataFrame for display
-            df = df.fillna('')  # Replace NaN with empty string
-            
+        results = data_lake.search_transactions(search_query, search_fields)
+        
+        if not results.empty:
             # Format date and amount columns
-            if 'date' in df.columns:
-                df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
-            if 'amount' in df.columns:
-                # Preserve the full number precision
-                df['amount'] = df['amount'].apply(lambda x: f"{float(x):.2f}" if x != '' else '')
-                
-            table_html = df.to_html(
+            results['date'] = pd.to_datetime(results['date']).dt.strftime('%Y-%m-%d')
+            results['amount'] = results['amount'].apply(lambda x: f"{float(x):.2f}")
+            
+            # Make source_file clickable
+            results['source_file'] = results['source_file'].apply(
+                lambda x: ' '.join([f'<a href="/file/{file.strip()}">{file.strip()}</a>' for file in x.split(', ')])
+            )
+            
+            table_html = results.to_html(
                 classes='table table-striped table-hover',
                 index=False,
-                table_id='transactionTable',
+                table_id='searchResultsTable',
                 escape=False
             )
             return jsonify({'data': table_html})
-        return jsonify({'data': '<p class="text-muted">No processed files found in the data lake.</p>'})
+            
+        return jsonify({'data': '<p class="text-muted">No results found.</p>'})
+        
     except Exception as e:
-        print(f"Error loading transactions: {str(e)}")  # Debug print
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/entry/<int:timestamp>', methods=['GET'])
+def get_entry(timestamp):
+    try:
+        entry = data_lake.get_entry(timestamp)
+        if entry is not None:
+            return jsonify(entry)
+        return jsonify({'error': 'Entry not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/entry', methods=['POST'])
+def add_entry():
+    try:
+        entry_data = request.json
+        success = data_lake.add_entry(entry_data)
+        if success:
+            return jsonify({'message': 'Entry added successfully'})
+        return jsonify({'error': 'Failed to add entry'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/entry/<int:timestamp>', methods=['PUT'])
+def update_entry(timestamp):
+    try:
+        entry_data = request.json
+        success = data_lake.update_entry(timestamp, entry_data)
+        if success:
+            return jsonify({'message': 'Entry updated successfully'})
+        return jsonify({'error': 'Failed to update entry'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/entry/<int:timestamp>', methods=['DELETE'])
+def delete_entry(timestamp):
+    try:
+        success = data_lake.delete_entry(timestamp)
+        if success:
+            return jsonify({'message': 'Entry deleted successfully'})
+        return jsonify({'error': 'Failed to delete entry'}), 400
+    except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':

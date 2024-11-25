@@ -84,6 +84,7 @@
             headers.eq(1).addClass('date-column');    // Date is second column
             headers.eq(2).addClass('amount-column');   // Amount is third column
             headers.eq(3).addClass('description-column'); // Description is fourth column
+            headers.eq(4).addClass('payee-column'); // Payee is fifth column
 
             // Initialize DataTable with proper column definitions
             table.DataTable({
@@ -131,6 +132,10 @@
                     {
                         targets: [3], // Description column
                         className: 'description-column'
+                    },
+                    {
+                        targets: [4], // Payee column
+                        className: 'payee-column'
                     }
                 ],
                 dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +

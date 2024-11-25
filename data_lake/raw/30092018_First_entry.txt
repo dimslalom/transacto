@@ -1,0 +1,4 @@
+29/09/2018 Shopping -2108.0 Payee: Store1
+Buying Supplies
+30/09/2018 ATM -10000.0 Payee: Bank
+Cash out

@@ -45,6 +45,10 @@ class TransactionProcessor:
             if any(word in col_lower for word in ['category', 'type']):
                 column_mapping['source'] = col
 
+            # Payee column detection
+            if 'payee' in col_lower:
+                column_mapping['payee'] = col
+
         return column_mapping
 
     def process_transactions(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -71,6 +75,10 @@ class TransactionProcessor:
         # Process description/category
         if 'source' in columns:
             transactions['description'] = df[columns['source']]
+        
+        # Process payee
+        if 'payee' in columns:
+            transactions['payee'] = df[columns['payee']]
         
         return transactions.dropna(how='all')
 

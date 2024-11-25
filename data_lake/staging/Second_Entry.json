@@ -1,0 +1,14 @@
+[
+    {
+        "date":"2018-09-29",
+        "amount":-2108.0,
+        "description":"Shopping - - Tape - Book - Pen",
+        "payee":"Store1"
+    },
+    {
+        "date":"2018-09-30",
+        "amount":-10000.0,
+        "description":"ATM",
+        "payee":"Mandiri"
+    }
+]
