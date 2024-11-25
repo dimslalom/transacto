@@ -135,16 +135,28 @@ class DocumentProcessor(BaseProcessor):
                     if i == 0:
                         # First row is assumed to be the header
                         keys = text
+                        # Make sure all required columns exist
+                        required_cols = ['date', 'amount', 'description', 'payee']
+                        if not all(col in text for col in required_cols):
+                            # Add missing columns with default values
+                            keys.extend([col for col in required_cols if col not in text])
                     else:
-                        if keys and len(text) == len(keys):
-                            data.append(dict(zip(keys, text)))
+                        # Extend row data with empty values if needed
+                        while len(text) < len(keys):
+                            text.append('')
+                        row_data = dict(zip(keys, text))
+                        # Ensure all required fields exist
+                        for col in ['date', 'amount', 'description', 'payee']:
+                            if col not in row_data:
+                                row_data[col] = ''
+                        data.append(row_data)
+                
                 if data:
                     df = pd.DataFrame(data)
-                    transactions = self.transaction_processor.process_transactions(df)
-                    if not transactions.empty:
-                        return transactions
-            print(f"No valid transaction tables found in DOCX: {file_path}")
-            return pd.DataFrame()
-        else:
-            print(f"No tables found in DOCX: {file_path}")
-            return pd.DataFrame()
+                    # Convert amount to float if present
+                    if 'amount' in df.columns:
+                        df['amount'] = pd.to_numeric(df['amount'], errors='coerce').fillna(0.0)
+                    return df
+
+        # If no valid table found, create DataFrame with minimum required columns
+        return pd.DataFrame(columns=['date', 'amount', 'description', 'payee'])

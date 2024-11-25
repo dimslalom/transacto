@@ -344,12 +344,63 @@ def delete_multiple_entries():
 
         success_count = 0
         for timestamp in timestamps:
-            if data_lake.delete_entry(int(timestamp)):
+            if data_lake.delete_entry(int(float(timestamp))):
                 success_count += 1
 
         return jsonify({
             'message': f'Successfully deleted {success_count} out of {len(timestamps)} entries'
         })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/transactions', methods=['GET'])
+def api_get_transactions():
+    try:
+        df = data_lake.get_master_data()
+        transactions = df.to_dict(orient='records')
+        return jsonify(transactions)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/transaction/<int:timestamp>', methods=['GET'])
+def api_get_transaction(timestamp):
+    try:
+        entry = data_lake.get_entry(timestamp)
+        if entry is not None:
+            return jsonify(entry)
+        return jsonify({'error': 'Entry not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/transaction', methods=['POST'])
+def api_add_transaction():
+    try:
+        entry_data = request.json
+        success = data_lake.add_entry(entry_data)
+        if success:
+            return jsonify({'message': 'Entry added successfully'})
+        return jsonify({'error': 'Failed to add entry'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/transaction/<int:timestamp>', methods=['PUT'])
+def api_update_transaction(timestamp):
+    try:
+        entry_data = request.json
+        success = data_lake.update_entry(timestamp, entry_data)
+        if success:
+            return jsonify({'message': 'Entry updated successfully'})
+        return jsonify({'error': 'Failed to update entry'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/transaction/<int:timestamp>', methods=['DELETE'])
+def api_delete_transaction(timestamp):
+    try:
+        success = data_lake.delete_entry(timestamp)
+        if success:
+            return jsonify({'message': 'Entry deleted successfully'})
+        return jsonify({'error': 'Failed to delete entry'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

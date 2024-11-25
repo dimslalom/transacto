@@ -400,6 +400,20 @@
     },
     {
         "date":1535673600000,
+        "amount":-300000.0,
+        "description":"Hotel",
+        "payee":"Konko",
+        "source_file":"data_lake\\staging\\DOCX_entry.json"
+    },
+    {
+        "date":1535673600000,
+        "amount":-200000.0,
+        "description":"Travel",
+        "payee":"Batik Air",
+        "source_file":"data_lake\\staging\\DOCX_entry.json"
+    },
+    {
+        "date":1535673600000,
         "amount":-892.5,
         "description":"Travel",
         "payee":"",
@@ -674,9 +688,9 @@
     {
         "date":1538179200000,
         "amount":-2108.0,
-        "description":"Shopping - - Tape - Book - Pen - Shopping - Shopping - Buying Supplies - Shopping - Shopping - Buying Supplies - Shopping - Shopping - Shopping - Buying Supplies - Shopping - Buying Supplies - Shopping - Buying Supplies - Shopping",
+        "description":"Shopping - Shopping - Buying Supplies - Shopping - - Tape - Book - Pen - Shopping - - Tape - Book - Pen - Shopping - Shopping - Buying Supplies - Shopping - Shopping - Buying Supplies - Shopping - Shopping - Shopping - Buying Supplies - Shopping - Buying Supplies - Shopping - Buying Supplies - Shopping - Shopping - Buying Supplies - Shopping - Shopping - Buying Supplies - Shopping - Shopping - - Tape - Book - Pen - Shopping - - Tape - Book - Pen - Shopping - - Tape - Book - Pen - Shopping - Buying Supplies - Shopping - Shopping - - Tape - Book - Pen - Shopping - Buying Supplies - Shopping - - Tape - Book - Pen - Shopping - Buying Supplies",
         "payee":"Store1",
-        "source_file":"data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json"
+        "source_file":"data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json"
     },
     {
         "date":1538179200000,
@@ -695,9 +709,9 @@
     {
         "date":1538265600000,
         "amount":-10000.0,
-        "description":"ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out",
-        "payee":"Mandiri - Bank",
-        "source_file":"data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json"
+        "description":"ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - Cash out - ATM - ATM - ATM - Cash out - ATM - Cash out",
+        "payee":"Bank - Bank - Mandiri - Mandiri - Bank - Mandiri - Bank - Mandiri - Bank - Mandiri - Bank - Bank - Mandiri - Mandiri",
+        "source_file":"data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json, data_lake\\staging\\Second_Entry.json, data_lake\\staging\\30092018_First_entry.json"
     },
     {
         "date":1538265600000,
@@ -719,12 +733,5 @@
         "description":"Interest",
         "payee":"",
         "source_file":"data_lake\\staging\\01-2018-30-2018-banking-statment-dataset.json"
-    },
-    {
-        "date":1732492800000,
-        "amount":20000.0,
-        "description":"Mie ayam",
-        "payee":"Kantin ITS",
-        "source_file":"manual_entry"
     }
 ]

@@ -1,644 +1,644 @@
 [
     {
-        "date":"2018-08-01",
-        "amount":-2500.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-01",
-        "amount":-324.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-02",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-08-03",
-        "amount":-404.38,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-04",
-        "amount":-100.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-04",
-        "amount":-1395.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-04",
-        "amount":-225.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-04",
-        "amount":-110.0,
-        "description":"Restaurant",
-        "payee":""
-    },
-    {
-        "date":"2018-08-04",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-08-05",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-08-06",
-        "amount":21.62,
-        "description":"Interest",
-        "payee":""
-    },
-    {
-        "date":"2018-08-06",
-        "amount":-818.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-07",
-        "amount":-2704.84,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-08",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-08-09",
-        "amount":-2053.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-10",
-        "amount":-659.75,
-        "description":"Medical",
-        "payee":""
-    },
-    {
-        "date":"2018-08-10",
-        "amount":-404.38,
-        "description":"Entertainment",
-        "payee":""
-    },
-    {
-        "date":"2018-08-11",
-        "amount":-577.5,
-        "description":"Travel",
-        "payee":""
-    },
-    {
-        "date":"2018-08-11",
-        "amount":-577.5,
-        "description":"Travel",
-        "payee":""
-    },
-    {
-        "date":"2018-08-11",
-        "amount":-921.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-11",
-        "amount":-108.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-11",
-        "amount":-853.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-11",
-        "amount":-397.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-11",
-        "amount":-130.0,
-        "description":"Entertainment",
-        "payee":""
-    },
-    {
-        "date":"2018-08-12",
-        "amount":-1375.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-12",
-        "amount":-1024.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-13",
-        "amount":-50.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-13",
-        "amount":20.29,
-        "description":"Interest",
-        "payee":""
-    },
-    {
-        "date":"2018-08-14",
-        "amount":-1305.0,
-        "description":"Medical",
-        "payee":""
-    },
-    {
-        "date":"2018-08-14",
-        "amount":-931.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-15",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-08-16",
-        "amount":-14000.0,
-        "description":"Rent",
-        "payee":""
-    },
-    {
-        "date":"2018-08-17",
-        "amount":-2800.52,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-18",
-        "amount":-410.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-18",
-        "amount":-8400.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-18",
-        "amount":-8296.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-18",
-        "amount":-11610.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-19",
-        "amount":-412.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-20",
-        "amount":21.0,
-        "description":"Interest",
-        "payee":""
-    },
-    {
-        "date":"2018-08-21",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-08-22",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-08-23",
-        "amount":-18777.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-23",
-        "amount":-685.0,
-        "description":"Medical",
-        "payee":""
-    },
-    {
-        "date":"2018-08-23",
-        "amount":-126.0,
-        "description":"Restaurant",
-        "payee":""
-    },
-    {
-        "date":"2018-08-24",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-08-25",
-        "amount":-548.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-25",
-        "amount":-399.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-25",
-        "amount":-445.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-25",
-        "amount":-764.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-25",
-        "amount":-386.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-25",
-        "amount":-772.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-25",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-08-25",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-08-26",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-08-27",
-        "amount":-2949.49,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-28",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-08-29",
-        "amount":-1380.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-30",
-        "amount":22.12,
-        "description":"Interest",
-        "payee":""
-    },
-    {
-        "date":"2018-08-30",
-        "amount":-3300.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-08-31",
-        "amount":-892.5,
-        "description":"Travel",
-        "payee":""
-    },
-    {
-        "date":"2018-08-31",
-        "amount":-590.0,
-        "description":"Travel",
-        "payee":""
-    },
-    {
-        "date":"2018-08-31",
-        "amount":250254.0,
-        "description":"Salary",
-        "payee":""
-    },
-    {
-        "date":"2018-08-31",
-        "amount":-340.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-09-01",
-        "amount":-200.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-09-01",
-        "amount":-33.5,
-        "description":"Entertainment",
-        "payee":""
-    },
-    {
-        "date":"2018-09-01",
-        "amount":-830.0,
-        "description":"Restaurant",
-        "payee":""
-    },
-    {
-        "date":"2018-09-02",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-03",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-04",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-05",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-06",
-        "amount":-2880.09,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-09-07",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-08",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-09-08",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-09-08",
-        "amount":-3257.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-09-09",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-10",
-        "amount":-20000.0,
-        "description":"Rent",
-        "payee":""
-    },
-    {
-        "date":"2018-09-11",
-        "amount":-202.19,
-        "description":"Entertainment",
-        "payee":""
-    },
-    {
-        "date":"2018-09-12",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-13",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-14",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-15",
-        "amount":-243.66,
-        "description":"Entertainment",
-        "payee":""
-    },
-    {
-        "date":"2018-09-15",
-        "amount":-5089.0,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-09-16",
-        "amount":-2569.88,
-        "description":"Shopping",
-        "payee":""
-    },
-    {
-        "date":"2018-09-17",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-18",
-        "amount":19.27,
-        "description":"Interest",
-        "payee":""
-    },
-    {
-        "date":"2018-09-19",
-        "amount":-10000.0,
-        "description":"ATM",
-        "payee":""
-    },
-    {
-        "date":"2018-09-20",
-        "amount":-202.19,
-        "description":"Entertainment",
-        "payee":""
-    },
-    {
-        "date":"2018-09-21",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-22",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-23",
-        "amount":-1000.0,
-        "description":"Medical",
-        "payee":""
-    },
-    {
-        "date":"2018-09-24",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-25",
+        "date":null,
         "amount":0.0,
-        "description":null,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-26",
-        "amount":2250.0,
-        "description":"Interest",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-26",
-        "amount":-3000.65,
-        "description":"Shopping",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-27",
-        "amount":-202.19,
-        "description":"Entertainment",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-28",
-        "amount":22.5,
-        "description":"Interest",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-28",
-        "amount":250254.0,
-        "description":"Salary",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-28",
-        "amount":-1869.0,
-        "description":"Shopping",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-29",
-        "amount":-1180.0,
-        "description":"Shopping",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-29",
-        "amount":-2108.0,
-        "description":"Shopping",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-29",
-        "amount":-202.19,
-        "description":"Shopping",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-29",
-        "amount":-202.19,
-        "description":"Shopping",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-30",
-        "amount":-1185.0,
-        "description":"Shopping",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-30",
-        "amount":-10000.0,
-        "description":"ATM",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-30",
-        "amount":-1155.75,
-        "description":"Medical",
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     },
     {
-        "date":"2018-09-30",
-        "amount":1673.0,
-        "description":"Interest",
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
+        "payee":""
+    },
+    {
+        "date":null,
+        "amount":0.0,
+        "description":"",
         "payee":""
     }
 ]

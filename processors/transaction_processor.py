@@ -52,35 +52,26 @@ class TransactionProcessor:
         return column_mapping
 
     def process_transactions(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Process dataframe into standardized transaction format"""
-        # Detect columns
-        columns = self.detect_columns(df)
+        # Ensure all required columns exist
+        required_cols = ['date', 'amount', 'description', 'payee']
+        for col in required_cols:
+            if col not in df.columns:
+                df[col] = ''
+                
+        # Process existing columns
+        if 'date' in df.columns:
+            df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
         
-        # Create standardized transaction dataframe
-        transactions = pd.DataFrame()
-        
-        # Process date
-        if 'date' in columns:
-            transactions['date'] = df[columns['date']].apply(self.normalize_date)
-        
-        # Process amounts - combine debit and credit
-        if 'debit_amount' in columns and 'credit_amount' in columns:
-            transactions['amount'] = df.apply(
-                lambda row: -float(row[columns['debit_amount']]) if pd.notna(row[columns['debit_amount']]) and float(row[columns['debit_amount']]) != 0 
-                else float(row[columns['credit_amount']]) if pd.notna(row[columns['credit_amount']]) 
-                else 0.0,
-                axis=1
-            )
-        
-        # Process description/category
-        if 'source' in columns:
-            transactions['description'] = df[columns['source']]
-        
-        # Process payee
-        if 'payee' in columns:
-            transactions['payee'] = df[columns['payee']]
-        
-        return transactions.dropna(how='all')
+        if 'amount' in df.columns:
+            df['amount'] = pd.to_numeric(df['amount'], errors='coerce').fillna(0.0)
+            
+        if 'description' not in df.columns:
+            df['description'] = ''
+            
+        if 'payee' not in df.columns:
+            df['payee'] = ''
+            
+        return df[required_cols]  # Return only required columns in correct order
 
     def normalize_date(self, value: str) -> str:
         """Convert various date formats to ISO format"""

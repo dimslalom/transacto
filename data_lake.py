@@ -59,16 +59,30 @@ class DataLake:
 
     def process_file(self, file_path: Path) -> pd.DataFrame:
         """Process different file types using appropriate processor"""
-        suffix = file_path.suffix.lower()
-        
-        if suffix in ['.csv', '.xlsx', '.xls']:
-            return self.excel_processor.process(file_path)
-        elif suffix in ['.pdf', '.docx']:
-            return self.document_processor.process(file_path)
-        elif suffix == '.txt':
-            return self.text_processor.process(file_path)
-        else:
-            raise ValueError(f"Unsupported file type: {suffix}")
+        try:
+            suffix = file_path.suffix.lower()
+            
+            if suffix in ['.csv', '.xlsx', '.xls']:
+                df = self.excel_processor.process(file_path)
+            elif suffix in ['.pdf', '.docx']:
+                df = self.document_processor.process(file_path)
+            elif suffix == '.txt':
+                df = self.text_processor.process(file_path)
+            else:
+                raise ValueError(f"Unsupported file type: {suffix}")
+                
+            # Ensure all required columns exist with correct types
+            required_cols = ['date', 'amount', 'description', 'payee']
+            for col in required_cols:
+                if col not in df.columns:
+                    df[col] = '' if col != 'amount' else 0.0
+                    
+            return df[required_cols]  # Return only required columns in correct order
+            
+        except Exception as e:
+            print(f"Error processing {file_path}: {e}")
+            # Return empty DataFrame with required columns
+            return pd.DataFrame(columns=['date', 'amount', 'description', 'payee'])
 
     def process_raw_data(self, folder: str = None) -> None:
         """Process all files in raw zone and save as JSON in staging"""

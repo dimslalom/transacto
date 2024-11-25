@@ -1,0 +1,14 @@
+[
+    {
+        "date":"31\/08\/2018",
+        "amount":-200000,
+        "description":"Travel",
+        "payee":"Batik Air"
+    },
+    {
+        "date":"31\/08\/2018",
+        "amount":-300000,
+        "description":"Hotel",
+        "payee":"Konko"
+    }
+]
