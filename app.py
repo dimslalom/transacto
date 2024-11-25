@@ -126,16 +126,20 @@ def move_file():
 @app.route('/file/<path:file_path>')
 def file_details(file_path):
     try:
-        full_path = os.path.join('data_lake', file_path)
-        if (os.path.exists(full_path)):
-            # For JSON files, read and return content
+        # Normalize file path
+        if file_path.startswith('data_lake/'):
+            file_path = file_path[10:]  # Remove data_lake/ prefix
+        full_path = Path(app.root_path) / 'data_lake' / file_path
+        
+        if full_path.exists():
             if file_path.endswith('.json'):
-                with open(full_path, 'r') as f:
+                with open(full_path, 'r', encoding='utf-8') as f:
                     content = f.read()
-                return jsonify({'content': content})
+                return render_template('view.html', 
+                                    data=f'<pre class="bg-light p-3">{content}</pre>')
             # For other files, return basic info
             return jsonify({
-                'name': os.path.basename(file_path),
+                'name': full_path.name,
                 'size': os.path.getsize(full_path),
                 'modified': os.path.getmtime(full_path)
             })
@@ -179,8 +183,10 @@ def get_transactions():
             df['amount'] = df['amount'].apply(lambda x: f"{float(x):.2f}" if x != '' else '')
         if 'source_file' in df.columns:
             df['source_file'] = df['source_file'].apply(
-                lambda x: ' '.join([f'<a href="/file/{file.strip()}">{file.strip()}</a>' 
-                                  for file in str(x).split(', ')])
+                lambda x: ' '.join([
+                    f'<a href="/file/{file.strip()}" class="btn btn-sm btn-outline-secondary">{Path(file.strip()).name}</a>' 
+                    for file in str(x).split(', ')
+                ])
             )
 
         # Ensure all required columns exist
